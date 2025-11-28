@@ -1,38 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+    <base href="$FLUTTER_BASE_HREF">
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="محفظتي الشخصية">
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="My Portfolio">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <link rel="icon" type="image/png" href="favicon.png"/>
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
+    <title>محفظتي الشخصية</title>
+    <link rel="manifest" href="manifest.json">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+    <style>
+        /* 1. إعداد الصفحة */
+        body {
+          background-color: #1E1E1E;
+          margin: 0;
+          height: 100vh;
+          width: 100vw;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          /* خط يدعم العربية والإنجليزية */
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="my_website">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+        .loader-content {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+        /* 2. الرمز < > */
+        .code-symbol {
+          font-size: 50px;
+          font-weight: bold;
+          color: #00ADB5;
+          font-family: 'Courier New', Courier, monospace; /* خط الكود */
 
-  <title>my_website</title>
-  <link rel="manifest" href="manifest.json">
+          /* الأنيميشن: وميض ضوئي فقط */
+          animation: light-pulse 2s infinite ease-in-out;
+        }
+
+        /* 3. النص العربي */
+        .loading-text {
+          margin-top: 20px;
+          color: #00ADB5;
+          font-size: 16px;
+          font-weight: bold;
+          opacity: 0.8;
+          animation: fade 2s infinite ease-in-out;
+        }
+
+        /* === الحركات === */
+
+        /* حركة وميض الضوء (بدون تكبير) */
+        @keyframes light-pulse {
+          0%, 100% {
+            opacity: 0.6; /* ضوء خافت */
+            text-shadow: 0 0 0 rgba(0, 173, 181, 0); /* لا يوجد توهج */
+          }
+          50% {
+            opacity: 1; /* ضوء قوي */
+            /* توهج نيون قوي ينتشر حول النص */
+            text-shadow: 0 0 30px rgba(0, 173, 181, 0.8);
+          }
+        }
+
+        /* حركة تلاشي النص */
+        @keyframes fade {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+
+    </style>
 </head>
+
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+
+<div class="loader-content">
+    <div class="code-symbol">&lt; &gt;</div>
+
+    <div class="loading-text">جار التحميل</div>
+</div>
+
+<script src="flutter_bootstrap.js" async></script>
+<script>
+    window.addEventListener('load', function(ev) {
+      _flutter.loader.load({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+</script>
 </body>
 </html>
