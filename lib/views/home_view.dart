@@ -10,6 +10,7 @@ import '../widgets/project_card.dart';
 import '../widgets/glowing_button.dart';
 import '../widgets/fade_in_up.dart';
 import '../widgets/modern_background.dart';
+import '../widgets/pulsing_text.dart';
 
 class HomeView extends GetView<HomeController> {
   @override
@@ -53,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                         children: [
                           FadeInUp(
                             delay: 400,
-                            child: SectionTitle(title: "أحدث أعمالي")
+                            child: SectionTitle(title: "احدث اعمالي")
                           ),
                           SizedBox(height: 70),
                           FadeInUp(
@@ -146,7 +147,6 @@ class HomeView extends GetView<HomeController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-
                           Text(
                               "هل لديك مشروع؟ لنعمل معاً",
                               style: TextStyle(color: AppColors.primary,
@@ -188,6 +188,13 @@ class HomeView extends GetView<HomeController> {
   // ================== الويدجتز المساعدة ==================
 
   Widget _buildHeroSection(BuildContext context) {
+    // نجهز الرمز الذي نريده أن ينبض
+    Widget pulsingCodeIcon = PulsingText(
+      text: "< / >", // الرمز بدل الأيقونة الجاهزة
+      color: AppColors.primary, // اللون المميز (التيل)
+      fontSize: 140, // حجم كبير جداً ليناسب الهيرو
+    );
+
     return ResponsiveHelper(
       desktop: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,13 +204,15 @@ class HomeView extends GetView<HomeController> {
           Expanded(
               flex: 1,
               child: Center(
-                  child: Icon(
-                      Icons.code, size: 200, color: AppColors.secondary))),
+                // استبدلنا Icon(Icons.code...) بهذا الويدجت
+                  child: pulsingCodeIcon
+              )),
         ],
       ),
       tablet: Column(
         children: [
-          Icon(Icons.code, size: 150, color: AppColors.secondary),
+          // استبدلنا الأيقونة هنا أيضاً
+          pulsingCodeIcon,
           SizedBox(height: 30),
           _heroContent(context, centerAlign: true),
         ],
@@ -211,13 +220,19 @@ class HomeView extends GetView<HomeController> {
       mobile: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.code, size: 120, color: AppColors.secondary),
+          // استبدلنا الأيقونة هنا أيضاً (بحجم أصغر قليلاً للجوال إذا أردت)
+          PulsingText(
+              text: "< / >",
+              color: AppColors.primary,
+              fontSize: 100 // حجم مناسب للجوال
+          ),
           SizedBox(height: 30),
           _heroContent(context, centerAlign: true),
         ],
       ),
     );
   }
+
 
   Widget _heroContent(BuildContext context, {bool centerAlign = false}) {
     return Container(

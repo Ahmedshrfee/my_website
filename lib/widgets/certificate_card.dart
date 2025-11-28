@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../models/certificate_model.dart';
 import '../utils/app_colors.dart';
+import '../controllers/home_controller.dart'; // 1. استدعاء الكنترولر
 
 class CertificateCard extends StatelessWidget {
   final CertificateModel certificate;
@@ -15,21 +15,20 @@ class CertificateCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(20), // زوايا أكثر انحناءً
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          // ظل خلفي قوي وناعم (Back Shadow)
           BoxShadow(
-            color: Colors.black.withOpacity(0.3), // لون أغمق قليلاً
-            blurRadius: 20, // انتشار واسع للظل
-            spreadRadius: 2, // حجم الظل
-            offset: Offset(0, 10), // اتجاه للأسفل
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 20,
+            spreadRadius: 2,
+            offset: Offset(0, 10),
           ),
         ],
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          // 1. الصورة (أخذت مساحة أقل قليلاً لترك مجال للنص)
+          // 1. الصورة
           Expanded(
             flex: 4,
             child: Container(
@@ -47,9 +46,9 @@ class CertificateCard extends StatelessWidget {
 
           // 2. المحتوى
           Expanded(
-            flex: 6, // زدنا المساحة هنا لتكفي 5 أسطر وزر
+            flex: 6,
             child: Padding(
-              padding: const EdgeInsets.all(16.0), // هوامش داخلية مريحة
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -58,7 +57,7 @@ class CertificateCard extends StatelessWidget {
                     certificate.title,
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18, // كبرنا الخط قليلاً
+                        fontSize: 18,
                         fontWeight: FontWeight.bold
                     ),
                     maxLines: 1,
@@ -67,19 +66,19 @@ class CertificateCard extends StatelessWidget {
 
                   SizedBox(height: 10),
 
-                  // الوصف (النص الجديد)
-                  Expanded( // نستخدم Expanded ليأخذ المساحة المتاحة قبل الزر
+                  // الوصف
+                  Expanded(
                     child: Text(
                       certificate.description,
                       style: TextStyle(
-                        color: Colors.grey[400], // لون رمادي فاتح
+                        color: Colors.grey[400],
                         fontSize: 14,
-                        fontWeight: FontWeight.w300, // خط نحيف جداً
-                        height: 1.5, // تباعد بين الأسطر للقراءة
+                        fontWeight: FontWeight.w300,
+                        height: 1.5,
                       ),
-                      maxLines: 5, // 5 أسطر كحد أقصى
+                      maxLines: 5,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.justify, // محاذاة النص
+                      textAlign: TextAlign.justify,
                     ),
                   ),
 
@@ -88,13 +87,21 @@ class CertificateCard extends StatelessWidget {
                   // الزر
                   SizedBox(
                     width: double.infinity,
-                    height: 45, // زر أكبر قليلاً
+                    height: 45,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final Uri url = Uri.parse(certificate.downloadUrl);
-                        if (!await launchUrl(url)) Get.snackbar(
-                            "تنبيه", "الرابط غير صالح");
+                      // ================== التعديل هنا ==================
+                      onPressed: () {
+                        // 1. الوصول للكنترولر
+                        final controller = Get.find<HomeController>();
+
+                        // 2. استدعاء دالة التحميل المباشر
+                        controller.downloadFile(
+                            certificate.downloadUrl,
+                            // نستخدم اسم الشهادة كاسم للملف عند التحميل
+                            filename: "${certificate.title}.png"
+                        );
                       },
+                      // ===============================================
                       icon: Icon(Icons.download_rounded, size: 20,
                           color: Colors.white),
                       label: Text("تحميل الشهادة",
@@ -103,7 +110,7 @@ class CertificateCard extends StatelessWidget {
                         backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
-                        elevation: 0, // إلغاء ظل الزر لأن الكرت له ظل
+                        elevation: 0,
                       ),
                     ),
                   ),
