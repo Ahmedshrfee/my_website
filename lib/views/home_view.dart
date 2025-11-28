@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:my_website/widgets/section_title.dart';
+import '../widgets/section_title.dart';
 import '../controllers/home_controller.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive_helper.dart';
@@ -11,6 +12,8 @@ import '../widgets/glowing_button.dart';
 import '../widgets/fade_in_up.dart';
 import '../widgets/modern_background.dart';
 import '../widgets/pulsing_text.dart';
+import '../widgets/skill_card.dart';
+import '../widgets/social_icon.dart';
 
 class HomeView extends GetView<HomeController> {
   @override
@@ -34,7 +37,8 @@ class HomeView extends GetView<HomeController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 120,),
+                    SizedBox(height: 50), // مسافة أولية
+
                     // 1. قسم الهيرو (Hero Section)
                     Container(
                       key: controller.homeKey, // مفتاح الرئيسية
@@ -44,19 +48,56 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 120),
+                    SizedBox(height: 120), // فاصل كبير
 
-                    // 2. قسم المشاريع (Projects Section)
+                    // 2. قسم المهارات التقنية (Skills Section)
+                    Container(
+                      key: controller.skillsKey, // مفتاح المهارات
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FadeInUp(
+                            delay: 300,
+                            child: SectionTitle(title: "مهاراتي التقنية"),
+                          ),
+                          SizedBox(height: 50),
+                          FadeInUp(
+                            delay: 400,
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 180,
+                                // أقصى عرض للكرت الواحد
+                                childAspectRatio: 1,
+                                // نسبة مربع (1:1)
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20,
+                              ),
+                              itemCount: controller.skills.length,
+                              itemBuilder: (context, index) {
+                                return SkillCard(
+                                    skill: controller.skills[index]);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 120), // فاصل كبير
+
+                    // 3. قسم المشاريع (Projects Section)
                     Container(
                       key: controller.projectsKey, // مفتاح المشاريع
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FadeInUp(
-                            delay: 400,
-                            child: SectionTitle(title: "احدث اعمالي")
+                              delay: 400,
+                              child: SectionTitle(title: "أحدث أعمالي")
                           ),
-                          SizedBox(height: 70),
+                          SizedBox(height: 50),
                           FadeInUp(
                             delay: 600,
                             child: GridView.builder(
@@ -71,7 +112,7 @@ class HomeView extends GetView<HomeController> {
                                     : 1,
                                 crossAxisSpacing: 30,
                                 mainAxisSpacing: 30,
-                                // نسبة العرض للطول: 0.65 تجعل الكرت طويلاً ومناسباً للوصف
+                                // نسبة العرض للطول
                                 childAspectRatio: ResponsiveHelper.isDesktop(
                                     context)
                                     ? 0.65
@@ -90,21 +131,20 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 200),
+                    SizedBox(height: 120), // فاصل كبير
 
-                    // 3. قسم الشهادات (Certificates Section)
+                    // 4. قسم الشهادات (Certificates Section)
                     Container(
-                      key: controller.certificatesKey,
-                      // مفتاح الشهادات (الجديد)
+                      key: controller.certificatesKey, // مفتاح الشهادات
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FadeInUp(
-                            delay: 800,
-                            child: SectionTitle(title: "شهاداتي و إنجازاتي")
+                              delay: 800,
+                              child: SectionTitle(title: "شهاداتي وإنجازاتي")
                           ),
 
-                          SizedBox(height: 70),
+                          SizedBox(height: 50),
 
                           FadeInUp(
                             delay: 1000,
@@ -114,7 +154,7 @@ class HomeView extends GetView<HomeController> {
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: ResponsiveHelper.isDesktop(
                                     context)
-                                    ? 3 // 3 أعمدة للكمبيوتر
+                                    ? 3
                                     : ResponsiveHelper.isTablet(context)
                                     ? 2
                                     : 1,
@@ -138,9 +178,9 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 200),
+                    SizedBox(height: 150), // فاصل قبل الفوتر
 
-                    // 4. قسم التواصل / الفوتر (Contact Section)
+                    // 5. قسم التواصل / الفوتر (Contact Section)
                     Container(
                       key: controller.contactKey, // مفتاح التواصل
                       width: double.infinity,
@@ -159,7 +199,31 @@ class HomeView extends GetView<HomeController> {
                               style: TextStyle(
                                   color: Colors.white, fontSize: 18)
                           ),
-                          SizedBox(height: 70),
+                          SizedBox(height: 30),
+
+                          // ================== صف الأيقونات ==================
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SocialIcon(
+                                  icon: FontAwesomeIcons.whatsapp,
+                                  url: controller.whatsappUrl
+                              ),
+                              SizedBox(width: 15),
+                              SocialIcon(
+                                  icon: FontAwesomeIcons.linkedinIn,
+                                  url: controller.linkedinUrl
+                              ),
+                              SizedBox(width: 15),
+                              SocialIcon(
+                                  icon: FontAwesomeIcons.github,
+                                  url: controller.githubUrl
+                              ),
+                            ],
+                          ),
+                          // ===================================================
+
+                          SizedBox(height: 50),
                           Text(
                               "© 2024 جميع الحقوق محفوظة",
                               style: TextStyle(color: AppColors.textGrey)
@@ -190,9 +254,9 @@ class HomeView extends GetView<HomeController> {
   Widget _buildHeroSection(BuildContext context) {
     // نجهز الرمز الذي نريده أن ينبض
     Widget pulsingCodeIcon = PulsingText(
-      text: "< / >", // الرمز بدل الأيقونة الجاهزة
-      color: AppColors.primary, // اللون المميز (التيل)
-      fontSize: 140, // حجم كبير جداً ليناسب الهيرو
+      text: "< / >",
+      color: AppColors.primary,
+      fontSize: 140,
     );
 
     return ResponsiveHelper(
@@ -204,14 +268,12 @@ class HomeView extends GetView<HomeController> {
           Expanded(
               flex: 1,
               child: Center(
-                // استبدلنا Icon(Icons.code...) بهذا الويدجت
                   child: pulsingCodeIcon
               )),
         ],
       ),
       tablet: Column(
         children: [
-          // استبدلنا الأيقونة هنا أيضاً
           pulsingCodeIcon,
           SizedBox(height: 30),
           _heroContent(context, centerAlign: true),
@@ -220,11 +282,10 @@ class HomeView extends GetView<HomeController> {
       mobile: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // استبدلنا الأيقونة هنا أيضاً (بحجم أصغر قليلاً للجوال إذا أردت)
           PulsingText(
               text: "< / >",
               color: AppColors.primary,
-              fontSize: 100 // حجم مناسب للجوال
+              fontSize: 100
           ),
           SizedBox(height: 30),
           _heroContent(context, centerAlign: true),
@@ -275,7 +336,6 @@ class HomeView extends GetView<HomeController> {
           GlowingButton(
             text: "تواصل معي",
             onPressed: () {
-              // عند الضغط ينزل لآخر الصفحة (قسم التواصل)
               controller.scrollToSection(controller.contactKey);
             },
           ),

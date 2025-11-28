@@ -49,6 +49,9 @@ class NavBar extends GetView<HomeController> {
                           SizedBox(width: 30),
                           _navItemDesktop("المشاريع", controller.projectsKey),
                           SizedBox(width: 30),
+                          _navItemDesktop("مهاراتي", controller.skillsKey),
+                          // <--- الرابط الجديد
+                          SizedBox(width: 30),
                           _navItemDesktop(
                               "شهاداتي", controller.certificatesKey),
                           SizedBox(width: 30),
@@ -88,7 +91,10 @@ class NavBar extends GetView<HomeController> {
                         child: controller.isMenuOpen.value
                             ? Column(children: [
                           _navItemMobile("الرئيسية", controller.homeKey),
+
+
                           _navItemMobile("المشاريع", controller.projectsKey),
+                          _navItemMobile("مهاراتي", controller.skillsKey),
                           _navItemMobile("شهاداتي", controller.certificatesKey),
                           _navItemMobile("اتصل بي", controller.contactKey),
 

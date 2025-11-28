@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http; // لجلب بيانات الملف
 import 'dart:html' as html; // مكتبة الويب للتحميل
 
 import '../models/project_model.dart';
 import '../models/certificate_model.dart';
+import '../models/skill_model.dart';
 
 class HomeController extends GetxController {
 
   // ================== مفاتيح الأقسام (Smooth Scroll) ==================
   final GlobalKey homeKey = GlobalKey();
+  final GlobalKey skillsKey = GlobalKey();
   final GlobalKey projectsKey = GlobalKey();
   final GlobalKey certificatesKey = GlobalKey();
   final GlobalKey contactKey = GlobalKey();
 
   // ================== متغيرات الحالة ==================
   var isMenuOpen = false.obs;
+  //================  روابط التواصل الاجتماعي ==============
+  final String whatsappUrl = "https://wa.me/967734301896"; // ضع رقمك الدولي بدون +
+  final String linkedinUrl = "https://www.linkedin.com/in/ahmed-butalah";
+  final String githubUrl = "https://github.com/Ahmedshrfee";
 
   // ================== البيانات ==================
 
@@ -32,6 +39,16 @@ class HomeController extends GetxController {
     ProjectModel(title: "حملة تسويقية عقارية",
         description: "صفحة هبوط حققت نسبة تحويل 15%.",
         techStack: "SEO, Google Ads"),
+  ];
+  final List<SkillModel> skills = [
+    SkillModel(name: "Flutter", icon: FontAwesomeIcons.mobileScreen),
+    SkillModel(name: "Dart", icon: FontAwesomeIcons.code),
+    SkillModel(name: "Firebase", icon: FontAwesomeIcons.fire),
+    SkillModel(name: "GetX", icon: FontAwesomeIcons.layerGroup),
+    SkillModel(name: "API Integration", icon: FontAwesomeIcons.server),
+    SkillModel(name: "Git & GitHub", icon: FontAwesomeIcons.github),
+    SkillModel(name: "UI/UX Design", icon: FontAwesomeIcons.penNib),
+    SkillModel(name: "Digital Marketing", icon: FontAwesomeIcons.bullhorn),
   ];
 
   // قائمة الشهادات (تمت استعادتها 3 شهادات)
