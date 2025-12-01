@@ -37,7 +37,6 @@ class CertificateCard extends StatelessWidget {
               child: Image.asset(
                 certificate.imagePath,
                 fit: BoxFit.cover,
-                  semanticLabel: "صورة شهادة ${certificate.title}",
                 errorBuilder: (context, error, stackTrace) =>
                     Icon(Icons.workspace_premium, size: 60,
                         color: Colors.white24),
