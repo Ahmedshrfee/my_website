@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/rendering.dart'; // مهم جداً لاستدعاء SemanticsBinding
 import 'package:google_fonts/google_fonts.dart';
-
-// هذه الاستدعاءات ضرورية جداً لدعم العربية
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/home_view.dart';
 
 void main() {
+  // 1. تفعيل Semantics (الترجمة لـ HTML) إجبارياً
+  // هذا يجعل جوجل يفهم أن هناك أزرار ونصوص وليس مجرد رسم
+  WidgetsFlutterBinding.ensureInitialized();
+  SemanticsBinding.instance.ensureSemantics();
+
   runApp(MyApp());
 }
 
@@ -16,35 +20,33 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'محفظتي الشخصية',
+      // العنوان الذي يظهر في التبويب
 
-      // --- إعدادات اللغة العربية والاتجاه ---
+      // إعدادات اللغة العربية
       locale: Locale('ar', 'AE'),
-      // تحديد اللغة الافتراضية عربية
       fallbackLocale: Locale('ar', 'AE'),
-      // لغة احتياطية
-
-      // تفويضات الترجمة (هذه المسؤولة عن قلب الاتجاه وتعريب الودجت الجاهزة)
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-
       supportedLocales: [
-        const Locale('ar', 'AE'), // العربية
-        const Locale('en', 'US'), // الإنجليزية (اذا احتجتها مستقبلاً)
+        const Locale('ar', 'AE'),
+        const Locale('en', 'US'),
       ],
-      // ------------------------------------
 
       theme: ThemeData(
-        // استخدمنا خط "كايرو" لأنه ممتاز مع العربية
         textTheme: GoogleFonts.cairoTextTheme(),
         primarySwatch: Colors.teal,
-
-        // تعديل اتجاه الأيقونات التلقائي (اختياري ولكنه مفيد)
-        iconTheme: IconThemeData(opacity: 1),
+        // تحسين التباين للأيقونات
+        iconTheme: IconThemeData(opacity: 1, color: Colors.white),
       ),
-      home: HomeView(),
+
+      // إضافة Semantics للروت
+      home: Semantics(
+        label: "الصفحة الرئيسية لمحفظة أعمالي",
+        child: HomeView(),
+      ),
     );
   }
 }
