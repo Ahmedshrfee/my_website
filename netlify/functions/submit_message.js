@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
     // الاتصال بـ Neon
     // DATABASE_URL هو المتغير الذي وفره Netlify تلقائياً عند الربط
     const client = new Client({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: process.env.NETLIFY_DATABASE_URL,
       ssl: { rejectUnauthorized: false }, // ضروري لـ Neon
     });
 
