@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/certificate_model.dart';
 import '../utils/app_colors.dart';
-import '../controllers/home_controller.dart'; // 1. استدعاء الكنترولر
+import '../controllers/download_controller.dart'; // 1. استدعاء الكنترولر الجديد
 
 class CertificateCard extends StatelessWidget {
   final CertificateModel certificate;
@@ -37,6 +37,8 @@ class CertificateCard extends StatelessWidget {
               child: Image.asset(
                 certificate.imagePath,
                 fit: BoxFit.cover,
+                // إضافة وصف للصورة لدعم SEO وإمكانية الوصول
+                semanticLabel: "شهادة ${certificate.title}",
                 errorBuilder: (context, error, stackTrace) =>
                     Icon(Icons.workspace_premium, size: 60,
                         color: Colors.white24),
@@ -91,14 +93,13 @@ class CertificateCard extends StatelessWidget {
                     child: ElevatedButton.icon(
                       // ================== التعديل هنا ==================
                       onPressed: () {
-                        // 1. الوصول للكنترولر
-                        final controller = Get.find<HomeController>();
+                        // 1. الوصول لكنترولر التحميل الجديد
+                        final controller = Get.find<downloadController>();
 
-                        // 2. استدعاء دالة التحميل المباشر
-                        controller.downloadFile(
+                        // 2. استدعاء دالة تحميل الشهادة
+                        controller.downloadCertificate(
                             certificate.downloadUrl,
-                            // نستخدم اسم الشهادة كاسم للملف عند التحميل
-                            filename: "${certificate.title}.png"
+                            certificate.title
                         );
                       },
                       // ===============================================

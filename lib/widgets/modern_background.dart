@@ -37,8 +37,8 @@ class ModernBackground extends StatelessWidget {
           bottom: -100,
           left: -100,
           child: Container(
-            width: 300,
-            height: 300,
+            width: 500,
+            height: 500,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(

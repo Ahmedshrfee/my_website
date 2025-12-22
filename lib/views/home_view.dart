@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../widgets/section_title.dart';
-import '../controllers/home_controller.dart';
+import 'package:my_website/data/personal_info.dart';
+
+// استدعاء الكنترولرات الجديدة
+import '../controllers/contact_controller.dart';
+import '../controllers/navigation_controller.dart';
+import '../controllers/data_controller.dart';
+import '../controllers/download_controller.dart';
+
 import '../utils/app_colors.dart';
 import '../utils/responsive_helper.dart';
+import '../widgets/section_title.dart';
 import '../widgets/certificate_card.dart';
 import '../widgets/nav_bar.dart';
 import '../widgets/project_card.dart';
@@ -15,11 +22,15 @@ import '../widgets/pulsing_text.dart';
 import '../widgets/skill_card.dart';
 import '../widgets/social_icon.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // حقن الكنترولر
-    Get.put(HomeController());
+    // 1. حقن الكنترولرات الجديدة (Dependency Injection)
+    final contactCtrl = Get.put(ContactController());
+    final navCtrl = Get.put(navigationController());
+    final dataCtrl = Get.put(dataController());
+    Get.put(
+        downloadController()); // نحقنه ليستخدمه الأبناء (مثل CertificateCard)
 
     return Scaffold(
       body: ModernBackground(
@@ -29,7 +40,7 @@ class HomeView extends GetView<HomeController> {
             Positioned.fill(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(
-                  top: 100, // مسافة علوية عشان الناف بار ما يغطي أول المحتوى
+                  top: 100,
                   left: ResponsiveHelper.isDesktop(context) ? 120 : 20,
                   right: ResponsiveHelper.isDesktop(context) ? 120 : 20,
                   bottom: 50,
@@ -37,28 +48,28 @@ class HomeView extends GetView<HomeController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 50), // مسافة أولية
+                    SizedBox(height: 50),
 
                     // 1. قسم الهيرو (Hero Section)
                     Container(
-                      key: controller.homeKey, // مفتاح الرئيسية
+                      key: navCtrl.homeKey, // استخدام navCtrl للمفاتيح
                       child: FadeInUp(
                           delay: 200,
-                          child: _buildHeroSection(context)
+                          child: _buildHeroSection(context, navCtrl, dataCtrl)
                       ),
                     ),
 
-                    SizedBox(height: 120), // فاصل كبير
+                    SizedBox(height: 120),
 
                     // 2. قسم المهارات التقنية (Skills Section)
                     Container(
-                      key: controller.skillsKey, // مفتاح المهارات
+                      key: navCtrl.skillsKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FadeInUp(
                             delay: 300,
-                            child: SectionTitle(title: "مهاراتي التقنية"),
+                            child: SectionTitle(title: "مهاراتي التقنية والتسويقية"),
                           ),
                           SizedBox(height: 50),
                           FadeInUp(
@@ -68,16 +79,15 @@ class HomeView extends GetView<HomeController> {
                               physics: NeverScrollableScrollPhysics(),
                               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                                 maxCrossAxisExtent: 180,
-                                // أقصى عرض للكرت الواحد
                                 childAspectRatio: 1,
-                                // نسبة مربع (1:1)
                                 crossAxisSpacing: 20,
                                 mainAxisSpacing: 20,
                               ),
-                              itemCount: controller.skills.length,
+                              itemCount: dataCtrl.skills.length,
+                              // استخدام dataCtrl للبيانات
                               itemBuilder: (context, index) {
                                 return SkillCard(
-                                    skill: controller.skills[index]);
+                                    skill: dataCtrl.skills[index]);
                               },
                             ),
                           ),
@@ -85,11 +95,11 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 120), // فاصل كبير
+                    SizedBox(height: 120),
 
                     // 3. قسم المشاريع (Projects Section)
                     Container(
-                      key: controller.projectsKey, // مفتاح المشاريع
+                      key: navCtrl.projectsKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -106,13 +116,12 @@ class HomeView extends GetView<HomeController> {
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: ResponsiveHelper.isDesktop(
                                     context)
-                                    ? 3 // 3 أعمدة للكمبيوتر
+                                    ? 3
                                     : ResponsiveHelper.isTablet(context)
                                     ? 2
                                     : 1,
                                 crossAxisSpacing: 30,
                                 mainAxisSpacing: 30,
-                                // نسبة العرض للطول
                                 childAspectRatio: ResponsiveHelper.isDesktop(
                                     context)
                                     ? 0.65
@@ -120,10 +129,11 @@ class HomeView extends GetView<HomeController> {
                                     ? 0.70
                                     : 0.85,
                               ),
-                              itemCount: controller.projects.length,
+                              itemCount: dataCtrl.projects.length,
+                              // استخدام dataCtrl للبيانات
                               itemBuilder: (context, index) {
                                 return ProjectCard(
-                                    project: controller.projects[index]);
+                                    project: dataCtrl.projects[index]);
                               },
                             ),
                           ),
@@ -131,11 +141,11 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 120), // فاصل كبير
+                    SizedBox(height: 120),
 
                     // 4. قسم الشهادات (Certificates Section)
                     Container(
-                      key: controller.certificatesKey, // مفتاح الشهادات
+                      key: navCtrl.certificatesKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -167,10 +177,11 @@ class HomeView extends GetView<HomeController> {
                                     ? 0.70
                                     : 0.85,
                               ),
-                              itemCount: controller.certificates.length,
+                              itemCount: dataCtrl.certificates.length,
+                              // استخدام dataCtrl للبيانات
                               itemBuilder: (context, index) {
-                                return CertificateCard(certificate: controller
-                                    .certificates[index]);
+                                return CertificateCard(
+                                    certificate: dataCtrl.certificates[index]);
                               },
                             ),
                           ),
@@ -178,11 +189,11 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    SizedBox(height: 150), // فاصل قبل الفوتر
+                    SizedBox(height: 150),
 
                     // 5. قسم التواصل / الفوتر (Contact Section)
                     Container(
-                      key: controller.contactKey, // مفتاح التواصل
+                      key: navCtrl.contactKey,
                       width: double.infinity,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,31 +204,101 @@ class HomeView extends GetView<HomeController> {
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold)
                           ),
+
+
+                          SizedBox(height: 30),
+                          Container(
+                            width: ResponsiveHelper.isDesktop(context)
+                                ? 500
+                                : double.infinity, // عرض مناسب
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              children: [
+                                // حقل الإيميل
+                                TextField(
+                                  controller: contactCtrl.emailController,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: "بريدك الإلكتروني",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    filled: true,
+                                    fillColor: Colors.black12,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            10)),
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+
+                                // حقل الرسالة
+                                TextField(
+                                  controller: contactCtrl.messageController,
+                                  style: TextStyle(color: Colors.white),
+                                  maxLines: 4, // مساحة أكبر للكتابة
+                                  decoration: InputDecoration(
+                                    hintText: "اكتب رسالتك هنا...",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    filled: true,
+                                    fillColor: Colors.black12,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            10)),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+
+                                // زر الإرسال
+                                Obx(() =>
+                                contactCtrl.isLoading.value
+                                    ? CircularProgressIndicator(
+                                    color: AppColors.primary)
+                                    : ElevatedButton(
+                                  onPressed: () => contactCtrl.sendMessage(),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 40, vertical: 15),
+                                  ),
+                                  child: Text("إرسال الرسالة", style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                                )
+                                ),
+                              ],
+                            ),
+                          ),
                           SizedBox(height: 10),
+
                           Text(
-                              "contact@yourmail.com", // ضع ايميلك هنا
+                              PersonalInfo.email,
                               style: TextStyle(
                                   color: Colors.white, fontSize: 18)
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(
+                            height: 30,
+                          ),
 
                           // ================== صف الأيقونات ==================
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SocialIcon(
-                                  icon: FontAwesomeIcons.whatsapp,
-                                  url: controller.whatsappUrl
+                                icon: FontAwesomeIcons.whatsapp,
+                                url: dataCtrl.whatsappUrl, // روابط من dataCtrl
                               ),
                               SizedBox(width: 15),
                               SocialIcon(
-                                  icon: FontAwesomeIcons.linkedinIn,
-                                  url: controller.linkedinUrl
+                                icon: FontAwesomeIcons.linkedinIn,
+                                url: dataCtrl.linkedinUrl,
                               ),
                               SizedBox(width: 15),
                               SocialIcon(
-                                  icon: FontAwesomeIcons.github,
-                                  url: controller.githubUrl
+                                icon: FontAwesomeIcons.github,
+                                url: dataCtrl.githubUrl,
                               ),
                             ],
                           ),
@@ -251,8 +332,9 @@ class HomeView extends GetView<HomeController> {
 
   // ================== الويدجتز المساعدة ==================
 
-  Widget _buildHeroSection(BuildContext context) {
-    // نجهز الرمز الذي نريده أن ينبض
+  // قمنا بتحديث الدوال لتقبل الكنترولرات كمعاملات (Arguments)
+  Widget _buildHeroSection(BuildContext context, navigationController navCtrl,
+      dataController dataCtrl) {
     Widget pulsingCodeIcon = PulsingText(
       text: "< / >",
       color: AppColors.primary,
@@ -264,7 +346,9 @@ class HomeView extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(flex: 2, child: _heroContent(context, centerAlign: false)),
+          Expanded(flex: 2,
+              child: _heroContent(
+                  context, navCtrl, dataCtrl, centerAlign: false)),
           Expanded(
               flex: 1,
               child: Center(
@@ -276,7 +360,7 @@ class HomeView extends GetView<HomeController> {
         children: [
           pulsingCodeIcon,
           SizedBox(height: 30),
-          _heroContent(context, centerAlign: true),
+          _heroContent(context, navCtrl, dataCtrl, centerAlign: true),
         ],
       ),
       mobile: Column(
@@ -288,14 +372,14 @@ class HomeView extends GetView<HomeController> {
               fontSize: 100
           ),
           SizedBox(height: 30),
-          _heroContent(context, centerAlign: true),
+          _heroContent(context, navCtrl, dataCtrl, centerAlign: true),
         ],
       ),
     );
   }
 
-
-  Widget _heroContent(BuildContext context, {bool centerAlign = false}) {
+  Widget _heroContent(BuildContext context, navigationController navCtrl,
+      dataController dataCtrl, {bool centerAlign = false}) {
     return Container(
       width: double.infinity,
       child: Column(
@@ -326,7 +410,7 @@ class HomeView extends GetView<HomeController> {
           Container(
             constraints: BoxConstraints(maxWidth: centerAlign ? 500 : 700),
             child: Text(
-              controller.aboutMe,
+              dataCtrl.aboutMe, // النص من داتا كنترولر
               textAlign: centerAlign ? TextAlign.center : TextAlign.start,
               style: TextStyle(
                   color: AppColors.textGrey, fontSize: 16, height: 1.6),
@@ -336,7 +420,8 @@ class HomeView extends GetView<HomeController> {
           GlowingButton(
             text: "تواصل معي",
             onPressed: () {
-              controller.scrollToSection(controller.contactKey);
+              // التنقل من نافيقيشن كنترولر
+              navCtrl.scrollToSection(navCtrl.contactKey);
             },
           ),
         ],

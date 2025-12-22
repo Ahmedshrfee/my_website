@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive_helper.dart';
-import '../controllers/home_controller.dart';
+
+// استدعاء الكنترولرات الجديدة
+import '../controllers/navigation_controller.dart';
+import '../controllers/download_controller.dart';
 import 'glowing_nav_item.dart';
 
-class NavBar extends GetView<HomeController> {
+class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // الوصول للكنترولرات المحقونة في HomeView
+    final navCtrl = Get.find<navigationController>();
+    final downCtrl = Get.find<downloadController>();
+
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
@@ -45,22 +52,24 @@ class NavBar extends GetView<HomeController> {
                     if (ResponsiveHelper.isDesktop(context))
                       Row(
                         children: [
-                          _navItemDesktop("الرئيسية", controller.homeKey),
-                          SizedBox(width: 30),
-                          _navItemDesktop("المشاريع", controller.projectsKey),
-                          SizedBox(width: 30),
-                          _navItemDesktop("مهاراتي", controller.skillsKey),
-                          // <--- الرابط الجديد
+                          _navItemDesktop("الرئيسية", navCtrl.homeKey, navCtrl),
                           SizedBox(width: 30),
                           _navItemDesktop(
-                              "شهاداتي", controller.certificatesKey),
+                              "المشاريع", navCtrl.projectsKey, navCtrl),
                           SizedBox(width: 30),
-                          _navItemDesktop("اتصل بي", controller.contactKey),
+                          _navItemDesktop(
+                              "مهاراتي", navCtrl.skillsKey, navCtrl),
+                          SizedBox(width: 30),
+                          _navItemDesktop(
+                              "شهاداتي", navCtrl.certificatesKey, navCtrl),
+                          SizedBox(width: 30),
+                          _navItemDesktop(
+                              "اتصل بي", navCtrl.contactKey, navCtrl),
 
                           SizedBox(width: 40), // مسافة فاصلة للزر
 
                           // زر السيرة الذاتية
-                          _resumeButton(),
+                          _resumeButton(downCtrl),
                         ],
                       )
                     // 3. زر القائمة للجوال
@@ -68,12 +77,12 @@ class NavBar extends GetView<HomeController> {
                       Obx(() =>
                           IconButton(
                             icon: Icon(
-                                controller.isMenuOpen.value
+                                navCtrl.isMenuOpen.value
                                     ? Icons.close
                                     : Icons.menu,
                                 color: AppColors.textWhite, size: 30
                             ),
-                            onPressed: () => controller.toggleMenu(),
+                            onPressed: () => navCtrl.toggleMenu(),
                           )),
                   ],
                 ),
@@ -85,24 +94,26 @@ class NavBar extends GetView<HomeController> {
                     AnimatedSize(
                       duration: Duration(milliseconds: 300),
                       child: Container(
-                        height: controller.isMenuOpen.value ? null : 0,
+                        height: navCtrl.isMenuOpen.value ? null : 0,
                         color: AppColors.background.withOpacity(0.85),
                         width: double.infinity,
-                        child: controller.isMenuOpen.value
+                        child: navCtrl.isMenuOpen.value
                             ? Column(children: [
-                          _navItemMobile("الرئيسية", controller.homeKey),
-
-
-                          _navItemMobile("المشاريع", controller.projectsKey),
-                          _navItemMobile("مهاراتي", controller.skillsKey),
-                          _navItemMobile("شهاداتي", controller.certificatesKey),
-                          _navItemMobile("اتصل بي", controller.contactKey),
+                          _navItemMobile("الرئيسية", navCtrl.homeKey, navCtrl),
+                          _navItemMobile("المشاريع", navCtrl.projectsKey,
+                              navCtrl),
+                          _navItemMobile("مهاراتي", navCtrl.skillsKey, navCtrl),
+                          _navItemMobile("شهاداتي", navCtrl.certificatesKey,
+                              navCtrl),
+                          _navItemMobile("اتصل بي", navCtrl.contactKey,
+                              navCtrl),
 
                           SizedBox(height: 15),
 
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
-                            child: _resumeButton(isMobile: true),
+                            child: _resumeButton(
+                                downCtrl, isMobile: true, navCtrl: navCtrl),
                           ),
                         ])
                             : SizedBox(),
@@ -116,18 +127,16 @@ class NavBar extends GetView<HomeController> {
   }
 
   // --- زر السيرة الذاتية ---
-  Widget _resumeButton({bool isMobile = false}) {
+  Widget _resumeButton(downloadController downCtrl,
+      {bool isMobile = false, navigationController? navCtrl}) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          // رابط السيرة الذاتية
-          String cvUrl = "https://raw.githubusercontent.com/Ahmedshrfee/my_website/refs/heads/master/lib/assets/images/certif1.png";
+          // استدعاء دالة التحميل من الكنترولر الجديد
+          downCtrl.downloadCV();
 
-          // استدعاء دالة التحميل
-          controller.downloadFile(cvUrl, filename: "Ahmed_CV.png");
-
-          if (isMobile) controller.closeMenu();
+          if (isMobile && navCtrl != null) navCtrl.closeMenu();
         },
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -160,20 +169,22 @@ class NavBar extends GetView<HomeController> {
   }
 
   // عنصر القائمة للكمبيوتر
-  Widget _navItemDesktop(String title, GlobalKey key) {
+  Widget _navItemDesktop(String title, GlobalKey key,
+      navigationController navCtrl) {
     return GlowingNavItem(
       text: title,
-      onTap: () => controller.scrollToSection(key),
+      onTap: () => navCtrl.scrollToSection(key),
     );
   }
 
   // عنصر القائمة للجوال
-  Widget _navItemMobile(String title, GlobalKey key) {
+  Widget _navItemMobile(String title, GlobalKey key,
+      navigationController navCtrl) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: GlowingNavItem(
         text: title,
-        onTap: () => controller.scrollToSection(key),
+        onTap: () => navCtrl.scrollToSection(key),
         isMobile: true,
       ),
     );
