@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'محفظتي الشخصية',
+      title: 'أحمد بوطلعه | Ahmed Butalah',
 
       // --- إعدادات اللغة العربية والاتجاه ---
       locale: Locale('ar', 'AE'),
