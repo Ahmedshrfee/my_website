@@ -306,7 +306,7 @@ class HomeView extends StatelessWidget {
 
                           SizedBox(height: 50),
                           Text(
-                              "© 2024 جميع الحقوق محفوظة",
+                              "© جميع الحقوق محفوظة لأحمد بوطلعة 2025",
                               style: TextStyle(color: AppColors.textGrey)
                           ),
                         ],
@@ -389,7 +389,7 @@ class HomeView extends StatelessWidget {
         centerAlign ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           Text(
-            "مرحباً، أنا المبرمج والمسوق",
+            "مرحباً، أنا أحمد بوطلعة",
             style: TextStyle(
                 color: AppColors.primary,
                 fontSize: 18,

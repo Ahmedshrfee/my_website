@@ -2,7 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/project_model.dart';
-import '../controllers/interaction_controller.dart'; // استدعاء الكنترولر العام
+import '../controllers/interaction_controller.dart';
+import '../controllers/download_controller.dart'; // استدعاء كنترولر التحميل/الروابط
 import '../utils/app_colors.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -12,12 +13,13 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // إنشاء كنترولر خاص بهذا الكرت
     final controller = Get.put(
         InteractionController(), tag: 'card_${project.title}');
+    // استدعاء الكنترولر الذي يحتوي على دالة فتح الروابط
+    final urlController = Get.find<downloadController>();
 
     return GestureDetector(
-      onTap: () => controller.toggle(), // للجوال (Toggle)
+      onTap: () => controller.toggle(),
       child: MouseRegion(
         onEnter: (_) => controller.onEnter(true),
         onExit: (_) => controller.onEnter(false),
@@ -97,12 +99,13 @@ class ProjectCard extends StatelessWidget {
                         scale: active ? 1.0 : 0.8,
                         duration: Duration(milliseconds: 300),
                         child: ElevatedButton(
+                          // ================== ربط الزر هنا ==================
                           onPressed: active ? () {
-                            print("تفاصيل: ${project.title}");
+                            urlController.launchWebUrl(project.gitHubUrl);
                           } : null,
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary),
-                          child: Text("تفاصيل المشروع",
+                          child: Text("عرض على GitHub",
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),

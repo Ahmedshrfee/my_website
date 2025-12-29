@@ -6,5 +6,5 @@ class PersonalInfo {
   static const String githubUrl = "https://github.com/Ahmedshrfee";
   static const String email = "Ahmadshrfee@gmail.com";
 
-  static const String cvDownloadUrl = "https://raw.githubusercontent.com/Ahmedshrfee/my_website/refs/heads/master/lib/assets/images/certif1.png";
+  static const String cvDownloadUrl = "https://raw.githubusercontent.com/Ahmedshrfee/my_website/refs/heads/master/lib/assets/images/AhmedCvPic.png";
 }

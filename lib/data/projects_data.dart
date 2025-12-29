@@ -2,18 +2,18 @@ import '../models/project_model.dart';
 
 final List<ProjectModel> projectList = [
   ProjectModel(
-    title: "متجر إلكتروني متكامل",
-    description: "تطبيق تجارة إلكترونية يدعم الدفع والخرائط hdd uhds dhisu dhisuk hdislh diuhs duiskh diu hsaidkhnaoislhdnuisk diusu dhiusdh isul hdio dhiol sauhdoialushkdiusdhfuids hiud chiu.",
-    techStack: "Flutter, Firebase",
+    title: "تطبيق وردي",
+    description: "هو تطبيق هاتف هدفه تنظيم اذكارك وورد قرآنك اليومي , وتنظيم اذكارك ومعرفه اوقات الصلاة وغيره",
+    techStack: "Flutter, GetX ,API", gitHubUrl: 'https://github.com/Ahmedshrfee/WerdiApp',
   ),
   ProjectModel(
-    title: "نظام إدارة مهام",
-    description: "لوحة تحكم لإدارة فرق العمل والإنتاجية.",
-    techStack: "Flutter Web, GetX",
+    title: "موقعي الخاص",
+    description: "هو موقع خاص بي يمثل سيرتي الذاتيه واعمالي مرتبه بشكل واضح",
+    techStack: "Flutter Web, GetX , sql", gitHubUrl: 'https://github.com/Ahmedshrfee/my_website',
   ),
   ProjectModel(
-    title: "حملة تسويقية عقارية",
-    description: "صفحة هبوط حققت نسبة تحويل 15%.",
-    techStack: "SEO, Google Ads",
+    title: "تطبيق تاسك هب",
+    description: "تطبيق الهدف منه ترتيب وتنظيم المهام  بين الأشخاص بشكل موثق وواضح",
+    techStack: "قريباً", gitHubUrl: 'https://github.com/Ahmedshrfee/task_hub',
   ),
 ];

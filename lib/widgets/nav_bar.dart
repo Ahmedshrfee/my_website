@@ -37,7 +37,7 @@ class NavBar extends StatelessWidget {
                   children: [
 
                     // 1. اللوجو (على اليمين في العربي)
-                    Text("<DevMarketer />",
+                    Text("Ahmed Butalah",
                         style: TextStyle(
                           color: AppColors.primary,
                           fontSize: 24,
