@@ -17,6 +17,6 @@ final List<CertificateModel> certificateList = [
     title: "Digital Marketing Google",
     description: "شهادة احترافية في التسويق الرقمي تشمل إدارة الحملات الإعلانية، تحسين محركات البحث (SEO)، وتحليل السوق مقدمه من قوقل وهي اعلى شهادات قوقل ومدتها 4 شهور",
     imagePath: "lib/assets/images/googleCertf.png",
-    downloadUrl: "https://raw.githubusercontent.com/Ahmedshrfee/my_website/refs/heads/master/lib/assets/images/certif1.png",
+    downloadUrl: "https://raw.githubusercontent.com/Ahmedshrfee/my_website/refs/heads/master/lib/assets/images/googleCertf.png",
   ),
 ];
